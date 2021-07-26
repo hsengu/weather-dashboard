@@ -24,7 +24,7 @@ function lookupWeather(query) {
             }
         }).then(function(onecallData) {
             outputWeather(onecallData);
-            outputForecast(oncallData);
+            outputForecast(onecallData);
         });
     });
 };
@@ -53,7 +53,15 @@ function outputWeather(data) {
                 break;
             case 2: pEl.text("Humidity: " + data.current.humidity + "%");
                 break;
-            case 3: pEl.text("UV Index: " + data.current.uvi);
+            case 3: pEl.text("UV Index: ");
+                if(data.current.uvi >= 8)
+                    bg_color = "bg-danger";
+                else if(data.current.uvi >= 3)
+                    bg_color = "bg-warning";
+                else
+                    bg_color = "bg-success";
+                var spanEl = $("<span class='" + bg_color + "'>" + data.current.uvi.toFixed(2) + "</span>");
+                spanEl.appendTo(pEl);
                 break;
         }
 
