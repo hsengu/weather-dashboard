@@ -124,7 +124,6 @@ function outputForecast(data) {
 
 function updateHistory() {
     var historyListEl = $("#history-list");
-    console.log(historyListEl);
     var findIndex = recent.findIndex(city => city === cityName);
 
     if(findIndex > -1)
@@ -137,7 +136,7 @@ function updateHistory() {
         historyListEl.html("");
 
         for(var i = recent.length - 1; i >= 0 ; i--) {
-            var btnEl = $("<button class='btn btn-secondary'>");
+            var btnEl = $("<button class='btn btn-secondary btn-block'>");
             
             btnEl.text(recent[i]);
             btnEl.appendTo(historyListEl);
@@ -147,6 +146,11 @@ function updateHistory() {
 
     localStorage.setItem("history", JSON.stringify(recent));
     cityName = "";
+
+    $("#history-list button").click(function() {
+        var search = $(this).text();
+        lookupWeather(search);
+    });
 }
 
 function getRecent() {
