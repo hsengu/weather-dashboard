@@ -94,7 +94,7 @@ function outputForecast(data) {
     
         var date = new Date(data.daily[i].dt * 1000);
         date = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
-        h4El.text(cityName + " (" + date + ")");
+        h4El.text(date);
         h4El.appendTo(cardBodyEl);
         
         for(var j = 0; j < 3; j++) {
@@ -137,3 +137,9 @@ $("#search-btn").click(function() {
     lookupWeather(search);
 });
 
+$("#search-box").keypress(function(event) {
+    if(event.keyCode == "13") {
+        $("#search-btn").trigger("click");
+        $(this).blur();
+    }
+});
