@@ -23,8 +23,8 @@ function lookupWeather(query) {
                 alert(onecallResponse.status);
             }
         }).then(function(onecallData) {
-            console.log(onecallData);
             outputWeather(onecallData);
+            outputForecast(oncallData);
         });
     });
 };
@@ -47,9 +47,9 @@ function outputWeather(data) {
         var pEl = $("<p>");
 
         switch(i) {
-            case 0: pEl.text("Temp: " + convertToImperial(data.current.temp) + " \xB0F");
+            case 0: pEl.text("Temp: " + convertToImperial(data.current.temp).toFixed(2) + " \xB0F");
                 break;
-            case 1: pEl.text("Wind: " + convertToMPH(data.current.wind_speed) + "MPH");
+            case 1: pEl.text("Wind: " + convertToMPH(data.current.wind_speed).toFixed(2) + " mph");
                 break;
             case 2: pEl.text("Humidity: " + data.current.humidity + "%");
                 break;
