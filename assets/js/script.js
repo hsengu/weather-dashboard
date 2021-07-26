@@ -4,6 +4,7 @@ var weather = "weather?q=";
 var onecall = "onecall?";
 var exclude = "exclude=minutely,hourly";
 var cityName = "";
+var recent = [];
 
 function lookupWeather(query) {
     fetch(endpoint + weather + query + "&" + weatherAPIkey).then(function(weatherResponse) {
@@ -25,6 +26,7 @@ function lookupWeather(query) {
         }).then(function(onecallData) {
             outputWeather(onecallData);
             outputForecast(onecallData);
+            updateHistory();
         });
     });
 };
@@ -120,6 +122,44 @@ function outputForecast(data) {
     rowEl.appendTo(forecastCol);
 }
 
+function updateHistory() {
+    var historyListEl = $("#history-list");
+    console.log(historyListEl);
+    var findIndex = recent.findIndex(city => city === cityName);
+
+    if(findIndex > -1)
+        recent.splice(findIndex, 1);
+    if(cityName !== "")
+        recent.push(cityName);
+
+
+    if(recent.length > 0) {
+        historyListEl.html("");
+
+        for(var i = recent.length - 1; i >= 0 ; i--) {
+            var btnEl = $("<button class='btn btn-secondary'>");
+            
+            btnEl.text(recent[i]);
+            btnEl.appendTo(historyListEl);
+        }
+    } else
+        return;
+
+    localStorage.setItem("history", JSON.stringify(recent));
+    cityName = "";
+}
+
+function getRecent() {
+    recent = localStorage.getItem("history");
+
+    if(recent)
+        recent = JSON.parse(recent);
+    else
+        recent = [];
+
+    updateHistory();
+}
+
 function convertToImperial(kelvin) {
     return (((kelvin - 273.15) * 1.8) + 32);
 }
@@ -140,6 +180,9 @@ $("#search-btn").click(function() {
 $("#search-box").keypress(function(event) {
     if(event.keyCode == "13") {
         $("#search-btn").trigger("click");
+        $(this).val("");
         $(this).blur();
     }
 });
+
+$(document).ready(getRecent());
