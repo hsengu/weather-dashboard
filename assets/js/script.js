@@ -34,14 +34,13 @@ function outputWeather(data) {
     cardEl.html("");
 
     var cardBodyEl = $("<div class='card-body'>");
-    var h5El = $("<div class='card-title'>");
-    var h6El = $("<div class='card-subtitle mb-2 text-muted'>");
+    var h4El = $("<h4 class='card-title'>");
     
 
     var date = new Date(data.current.dt * 1000);
     date = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
-    h5El.text(cityName + " (" + date + ")");
-    h5El.appendTo(cardBodyEl);
+    h4El.text(cityName + " (" + date + ")");
+    h4El.appendTo(cardBodyEl);
     
     for(var i = 0; i < 4; i++) {
         var pEl = $("<p>");
@@ -71,8 +70,54 @@ function outputWeather(data) {
     cardBodyEl.appendTo(cardEl);
 }
 
-function outputForecast(forecastData) {
+function outputForecast(data) {
+    var forecastCol = $("#forecast");
+    forecastCol.html("");
 
+    var rowEl = $("<div class='row'>");
+    var colEl = $("<div class='col'>");
+    var h5El = $("<h5>");
+    h5El.text("5-Day Forecast");
+
+    h5El.appendTo(colEl);
+    colEl.appendTo(rowEl);
+    rowEl.appendTo(forecastCol);
+    
+    rowEl = $("<div class='row'>");
+
+    for(var i = 1; i <= 5; i++) {
+        colEl = $("<div class='col'>");
+
+        var cardEl = $("<div class='card'>");
+        var cardBodyEl = $("<div class='card-body'>");
+        var h4El = $("<h4 class='card-title'>");
+    
+        var date = new Date(data.daily[i].dt * 1000);
+        date = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
+        h4El.text(cityName + " (" + date + ")");
+        h4El.appendTo(cardBodyEl);
+        
+        for(var j = 0; j < 3; j++) {
+            var pEl = $("<p>");
+    
+            switch(j) {
+                case 0: pEl.text("Temp: " + convertToImperial(data.daily[i].temp.max).toFixed(2) + " \xB0F");
+                    break;
+                case 1: pEl.text("Wind: " + convertToMPH(data.daily[i].wind_speed).toFixed(2) + " mph");
+                    break;
+                case 2: pEl.text("Humidity: " + data.daily[i].humidity + "%");
+                    break;
+            }
+    
+            pEl.appendTo(cardBodyEl);
+        }
+    
+        cardBodyEl.appendTo(cardEl);
+        cardEl.appendTo(colEl);
+        colEl.appendTo(rowEl);
+    }
+
+    rowEl.appendTo(forecastCol);
 }
 
 function convertToImperial(kelvin) {
