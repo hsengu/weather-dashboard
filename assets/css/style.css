@@ -1,3 +1,26 @@
 * {
     font-family: 'Noto Sans', sans-serif;
 }
+
+.main-card {
+    background-color: darkgrey;
+    color: white;
+}
+
+.main-card-title .forecast-card-title {
+    display: flex;
+    flex: nowrap;
+    align-items: center;
+}
+
+.forecast-card {
+    background-color: darkslateblue;
+    color: white;
+}
+
+.uvi {
+    color: white;
+    font-size: 13px;
+    border-radius: 5px;
+    padding: 5px 10px;
+}

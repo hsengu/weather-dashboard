@@ -11,7 +11,14 @@ function lookupWeather(query) {
         if(weatherResponse.ok) {
             return weatherResponse.json();
         } else {
-            alert(weatherResponse.status);
+            switch(weatherResponse.status) {
+                case 400:
+                    break;
+                case 403:
+                    break;
+                case 404:
+                    break;
+            };
         }
     }).then(function(weatherData) {
         var lat = "lat=" + weatherData.coord.lat;
@@ -35,13 +42,13 @@ function outputWeather(data) {
     var cardEl = $("#main-card");
     cardEl.html("");
 
-    var cardBodyEl = $("<div class='card-body'>");
-    var h4El = $("<h4 class='card-title'>");
+    var cardBodyEl = $("<div class='card-body main-card'>");
+    var h4El = $("<h4 class='card-title main-card-title'>");
     
 
     var date = new Date(data.current.dt * 1000);
     date = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
-    h4El.text(cityName + " (" + date + ")");
+    h4El.html("<span>" + cityName + " (" + date + ")</span><span><img src='http://openweathermap.org/img/wn/" + data.current.weather[0].icon + ".png'></img></span>");
     h4El.appendTo(cardBodyEl);
     
     for(var i = 0; i < 4; i++) {
@@ -61,7 +68,7 @@ function outputWeather(data) {
                     bg_color = "bg-warning";
                 else
                     bg_color = "bg-success";
-                var spanEl = $("<span class='" + bg_color + "'>" + data.current.uvi.toFixed(2) + "</span>");
+                var spanEl = $("<span class='" + bg_color + " uvi'>" + data.current.uvi.toFixed(2) + "</span>");
                 spanEl.appendTo(pEl);
                 break;
         }
@@ -91,12 +98,12 @@ function outputForecast(data) {
         colEl = $("<div class='col'>");
 
         var cardEl = $("<div class='card'>");
-        var cardBodyEl = $("<div class='card-body'>");
-        var h4El = $("<h4 class='card-title'>");
+        var cardBodyEl = $("<div class='card-body forecast-card'>");
+        var h4El = $("<h5 class='card-title forecast-card-title'>");
     
         var date = new Date(data.daily[i].dt * 1000);
-        date = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
-        h4El.text(date);
+        date = "<span>" + (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
+        h4El.html("<span>" + date + "</span><span><img src='http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + ".png'></img></span>");
         h4El.appendTo(cardBodyEl);
         
         for(var j = 0; j < 3; j++) {
@@ -149,6 +156,7 @@ function updateHistory() {
 
     $("#history-list button").click(function() {
         var search = $(this).text();
+        $("#search-box").val("");
         lookupWeather(search);
     });
 }
@@ -156,10 +164,7 @@ function updateHistory() {
 function getRecent() {
     recent = localStorage.getItem("history");
 
-    if(recent)
-        recent = JSON.parse(recent);
-    else
-        recent = [];
+    recent = recent ? JSON.parse(recent) : [];
 
     updateHistory();
 }
@@ -177,8 +182,14 @@ function convertToMPH(meters) {
 }
 
 $("#search-btn").click(function() {
-    var search = ($(this).parent().siblings()[0].value);
-    lookupWeather(search);
+    var search = $("#search-box").val();
+    console.log(search);
+    if(search === "")
+        alert("Please enter a city name.");
+    else {
+        $("#search-box").val("");
+        lookupWeather(search);
+    }
 });
 
 $("#search-box").keypress(function(event) {
