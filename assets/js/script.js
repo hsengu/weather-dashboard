@@ -95,7 +95,8 @@ function outputForecast(data) {
     rowEl = $("<div class='row'>");
 
     for(var i = 1; i <= 5; i++) {
-        colEl = $("<div class='col'>");
+        var colBreakEl = $("<div class='d-xl-none w-100'>")
+        colEl = $("<div class='col-sm hidden-xs'>");
 
         var cardEl = $("<div class='card'>");
         var cardBodyEl = $("<div class='card-body forecast-card'>");
@@ -103,7 +104,7 @@ function outputForecast(data) {
     
         var date = new Date(data.daily[i].dt * 1000);
         date = "<span>" + (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
-        h4El.html("<span>" + date + "</span><span><img src='http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + ".png'></img></span>");
+        h4El.html("<span>" + date + "</span><br><span><img src='http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + ".png'></img></span>");
         h4El.appendTo(cardBodyEl);
         
         for(var j = 0; j < 3; j++) {
@@ -123,6 +124,8 @@ function outputForecast(data) {
     
         cardBodyEl.appendTo(cardEl);
         cardEl.appendTo(colEl);
+        if((i % 2) === 0)
+            colBreakEl.appendTo(rowEl);
         colEl.appendTo(rowEl);
     }
 

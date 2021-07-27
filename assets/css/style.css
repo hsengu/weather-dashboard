@@ -2,6 +2,18 @@
     font-family: 'Noto Sans', sans-serif;
 }
 
+body {
+    padding-bottom: 40px;
+}
+
+.card {
+    margin-top: 10px;
+}
+
+.row {
+    margin-top: 20px;
+}
+
 .main-card {
     background-color: darkgrey;
     color: white;
