@@ -11,14 +11,7 @@ function lookupWeather(query) {
         if(weatherResponse.ok) {
             return weatherResponse.json();
         } else {
-            switch(weatherResponse.status) {
-                case 400:
-                    break;
-                case 403:
-                    break;
-                case 404:
-                    break;
-            };
+            alert("Status: " + weatherResponse.status + " - " + weatherResponse.statusText);
         }
     }).then(function(weatherData) {
         var lat = "lat=" + weatherData.coord.lat;
@@ -28,7 +21,7 @@ function lookupWeather(query) {
             if(onecallResponse.ok) {
                 return onecallResponse.json();
             } else {
-                alert(onecallResponse.status);
+                alert("Status: " + onecallResponse.status + " - " + onecallResponse.statusText);
             }
         }).then(function(onecallData) {
             outputWeather(onecallData);
