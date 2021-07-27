@@ -6,6 +6,7 @@ var exclude = "exclude=minutely,hourly";
 var cityName = "";
 var recent = [];
 
+// API call function
 function lookupWeather(query) {
     fetch(endpoint + weather + query + "&" + weatherAPIkey).then(function(weatherResponse) {
         if(weatherResponse.ok) {
@@ -31,13 +32,13 @@ function lookupWeather(query) {
     });
 };
 
+// Function for outputting current weather data
 function outputWeather(data) {
     var cardEl = $("#main-card");
     cardEl.html("");
 
     var cardBodyEl = $("<div class='card-body main-card'>");
     var h4El = $("<h4 class='card-title main-card-title'>");
-    
 
     var date = new Date(data.current.dt * 1000);
     date = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
@@ -72,6 +73,7 @@ function outputWeather(data) {
     cardBodyEl.appendTo(cardEl);
 }
 
+// Function for outputting forecast data for next 5 days
 function outputForecast(data) {
     var forecastCol = $("#forecast");
     forecastCol.html("");
@@ -87,7 +89,7 @@ function outputForecast(data) {
     
     rowEl = $("<div class='row'>");
 
-    for(var i = 1; i <= 5; i++) {
+    for(var i = 1; i <= 5; i++) {                               // Loop 5 times (5-days)
         var colBreakEl = $("<div class='d-xl-none w-100'>")
         colEl = $("<div class='col-sm hidden-xs'>");
 
@@ -117,7 +119,7 @@ function outputForecast(data) {
     
         cardBodyEl.appendTo(cardEl);
         cardEl.appendTo(colEl);
-        if((i % 2) === 0)
+        if((i % 2) === 0)                   // Insert a column break before 2nd and 4th columns
             colBreakEl.appendTo(rowEl);
         colEl.appendTo(rowEl);
     }
@@ -125,11 +127,12 @@ function outputForecast(data) {
     rowEl.appendTo(forecastCol);
 }
 
+// Function for updating history list
 function updateHistory() {
     var historyListEl = $("#history-list");
     var findIndex = recent.findIndex(city => city === cityName);
 
-    if(findIndex > -1)
+    if(findIndex > -1)                  // Always keep most recent search at the last element
         recent.splice(findIndex, 1);
     if(cityName !== "")
         recent.push(cityName);
@@ -138,7 +141,7 @@ function updateHistory() {
     if(recent.length > 0) {
         historyListEl.html("");
 
-        for(var i = recent.length - 1; i >= 0 ; i--) {
+        for(var i = recent.length - 1; i >= 0 ; i--) {              // Create the history list rear to front (most recent at the top)
             var btnEl = $("<button class='btn btn-secondary btn-block'>");
             
             btnEl.text(recent[i]);
@@ -157,6 +160,7 @@ function updateHistory() {
     });
 }
 
+// Function for loading history from local storage
 function getRecent() {
     recent = localStorage.getItem("history");
 
@@ -165,18 +169,22 @@ function getRecent() {
     updateHistory();
 }
 
+// Convert default temp units from kelvin to Fahrenheit
 function convertToImperial(kelvin) {
     return (((kelvin - 273.15) * 1.8) + 32);
 }
 
+// Convert default temp units from kelvin to Celcius
 function convertToMetric(kelvin) {
     return (kelvin - 273.15);
 }
 
+// Convert default m/s to mph
 function convertToMPH(meters) {
     return meters * 2.237;
 }
 
+// Search button click handler
 $("#search-btn").click(function() {
     var search = $("#search-box").val();
     console.log(search);
@@ -188,6 +196,7 @@ $("#search-btn").click(function() {
     }
 });
 
+// Search box handler
 $("#search-box").keypress(function(event) {
     if(event.keyCode == "13") {
         $("#search-btn").trigger("click");
@@ -196,4 +205,5 @@ $("#search-box").keypress(function(event) {
     }
 });
 
+// Load history when document is ready
 $(document).ready(getRecent());
